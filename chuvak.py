@@ -282,18 +282,19 @@ def main():
     app = Application.builder().token(TELEGRAM_TOKEN).build()
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    # Получаем порт от Render
     PORT = int(os.environ.get('PORT', 8000))
-    WEBHOOK_URL = os.environ.get('WEBHOOK_URL')  # Например: https://chuvak.onrender.com
+    WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
 
-    if WEBHOOK_URL:
-        # Устанавливаем webhook
-        app.run_webhook(
-            listen="0.0.0.0",
-            port=PORT,
-            url_path=TELEGRAM_TOKEN,
-            webhook_url=f"{WEBHOOK_URL}/{TELEGRAM_TOKEN}"
-        )
-    else:
-        # Для локального запуска
-        app.run_polling()
+    if not WEBHOOK_URL:
+        raise ValueError("WEBHOOK_URL не задан. Укажите его в Environment Variables на Render.")
+
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path=TELEGRAM_TOKEN,
+        webhook_url=f"{WEBHOOK_URL}/{TELEGRAM_TOKEN}"
+    )
+
+if __name__ == '__main__':
+    import asyncio
+    asyncio.run(main())
