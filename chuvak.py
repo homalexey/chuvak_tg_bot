@@ -181,27 +181,29 @@ def get_urban(term: str) -> str:
 # === ОБРАБОТЧИК СООБЩЕНИЙ ===
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Защита: если нет сообщения или нет текста — выходим
+    if not update.message or not update.message.text:
+        return
+
     text = update.message.text.strip()
     chat_type = update.message.chat.type
 
-    # В личке — любой запрос
+    # В личке — любой короткий запрос
     if chat_type == 'private':
         clean_text = re.sub(r'[^\w\s]', '', text).strip()
         if clean_text and len(clean_text.split()) <= 5:
             await process_query(update, clean_text)
         return
 
-    # В группе — ловим упоминания ИЛИ фразы с "Чувак"
+    # В группе — упоминание ИЛИ фраза с "Чувак"
     if chat_type != 'private':
-        # Случай 1: упоминание
         if update.message.text.startswith(f"@{context.bot.username}"):
             text = update.message.text[len(f"@{context.bot.username}"):].strip()
             if text:
                 await process_query(update, text)
             return
 
-        # Случай 2: фраза с "Чувак"
-        pattern = re.compile(r'^(чувак\s*,?\s+)(что\s+такое|кто\s+такой)\s+(.+)', re.IGNORECASE)
+        pattern = re.compile(r'^(чувств?ак\s*,?\s+)(что\s+такое|кто\s+такой)\s+(.+)', re.IGNORECASE)
         match = pattern.search(text)
         if match:
             term = match.group(3).strip(' ?.')
