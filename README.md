@@ -1,2 +1,2 @@
-# Chuvak_tg_bot
+# Chuvak-tg-bot
 ТГ-бот Чувак Шарит
