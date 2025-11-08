@@ -203,7 +203,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await process_query(update, text)
             return
 
-        pattern = re.compile(r'^(чувств?ак\s*,?\s+)(что\s+такое|кто\s+такой)\s+(.+)', re.IGNORECASE)
+        pattern = re.compile(r'^(чувак\s*,?\s+)(что\s+такое|кто\s+такой)\s+(.+)', re.IGNORECASE)
         match = pattern.search(text)
         if match:
             term = match.group(3).strip(' ?.')
@@ -246,7 +246,7 @@ async def process_query(update: Update, term: str):
 - 2–3 предложения,
 - на разговорном русском,
 - без упоминания источников (не пиши «Википедия говорит...»),
-- можно с лёгким сленгом (типо «шарит», «лол», «мем», «треш»),
+- можно с лёгким сленгом (типо «шарит», «лол», «мем», «треш», «рофл», «хайп», «кринж»),
 - как будто объясняешь другу в чате.
 
 Данные:
